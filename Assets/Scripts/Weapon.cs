@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Weapon : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class Weapon : MonoBehaviour
     private float fireTimer;
     private bool isReloading;
     public int damage;
+    public float spreadFactor;
 
     [Header("Components")]
     public Transform shootPoint;
@@ -27,6 +29,9 @@ public class Weapon : MonoBehaviour
     public Vector3 aimPos;
     public float aimSpeed;
     private Vector3 originalPos;
+
+    [Header("UI")]
+    public Text ammoText;
 
     public enum ShootMode
     {
@@ -45,6 +50,13 @@ public class Weapon : MonoBehaviour
 
         originalPos = transform.localPosition;
         currentBullets = totalBullets;
+
+        UpdateAmmoText();
+    }
+
+    private void OnEnable()
+    {
+        UpdateAmmoText();
     }
 
     // Update is called once per frame
@@ -106,7 +118,10 @@ public class Weapon : MonoBehaviour
 
         RaycastHit hit;
 
-        if (Physics.Raycast(shootPoint.position, shootPoint.transform.forward, out hit, range))
+        Vector3 shootDirection = shootPoint.transform.forward;
+        shootDirection += shootPoint.TransformDirection(new Vector3(Random.Range(-spreadFactor, spreadFactor), Random.Range(-spreadFactor, spreadFactor)));
+
+        if (Physics.Raycast(shootPoint.position, shootDirection, out hit, range))
         {
             GameObject hitParticle = Instantiate(hitEffect, hit.point, Quaternion.FromToRotation(Vector3.up, hit.normal));
             GameObject bullet = Instantiate(bulletImpact, hit.point, Quaternion.FromToRotation(Vector3.forward, hit.normal));
@@ -124,6 +139,7 @@ public class Weapon : MonoBehaviour
         anim.CrossFadeInFixedTime("Fire", 0.01f);
         fireEffect.Play();
         PlayShootSound();
+        UpdateAmmoText();
         currentBullets--;
         fireTimer = 0f;
     }
@@ -148,6 +164,7 @@ public class Weapon : MonoBehaviour
         }
 
         anim.CrossFadeInFixedTime("Reload", 0.01f);
+        UpdateAmmoText();
     }
 
     public void Reload()
@@ -162,10 +179,17 @@ public class Weapon : MonoBehaviour
 
         bulletsLeft -= bulletsToDeduct;
         currentBullets += bulletsToDeduct;
+
+        UpdateAmmoText();
     }
 
     private void PlayShootSound()
     {
         audioSource.PlayOneShot(shootSound);
+    }
+
+    private void UpdateAmmoText()
+    {
+        ammoText.text = currentBullets + "/" + bulletsLeft;
     }
 }
