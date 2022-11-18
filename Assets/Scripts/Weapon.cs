@@ -50,19 +50,6 @@ public class Weapon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetButton("Fire1"))
-        //{
-        //    if (currentBullets > 0)
-        //    {
-        //        // executa método de disparo
-        //        Fire();
-        //    }
-        //    else if (bulletsLeft > 0)
-        //    {
-        //        DoReload();
-        //    }
-        //}
-
         switch (shootMode)
         {
             case ShootMode.Auto:
