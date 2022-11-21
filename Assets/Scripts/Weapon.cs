@@ -134,6 +134,11 @@ public class Weapon : MonoBehaviour
             {
                 hit.transform.GetComponent<ObjectHealth>().ApplyDamage(damage);
             }
+
+            if (hit.transform.GetComponent<Soldier>())
+            {
+                hit.transform.GetComponent<Soldier>().ApplyDamage(damage);
+            }
         }
 
         anim.CrossFadeInFixedTime("Fire", 0.01f);
