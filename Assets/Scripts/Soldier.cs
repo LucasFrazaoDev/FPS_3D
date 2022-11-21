@@ -10,6 +10,10 @@ public class Soldier : MonoBehaviour
     private Animator anim;
     private NavMeshAgent navMesh;
     private GameObject player;
+    private AudioSource audioSource;
+
+    public ParticleSystem fireEffect;
+    public AudioClip shootAudio;
 
     public float atkDistance = 10f; // distancia para atacar
     public float followDistance = 20f; // distancia para seguir
@@ -19,6 +23,7 @@ public class Soldier : MonoBehaviour
     public int health = 100;
     public float fireRate = 0.5f;
     private float fireTimer;
+    private bool isDead;
 
     public Transform shootpoint;
     public float range = 100f;
@@ -28,6 +33,7 @@ public class Soldier : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         navMesh= GetComponent<NavMeshAgent>();
+        audioSource = GetComponent<AudioSource>();
         player = GameObject.FindGameObjectWithTag("Player");
     }
 
@@ -85,6 +91,9 @@ public class Soldier : MonoBehaviour
             }
         }
 
+        fireEffect.Play();
+        ShootFX();
+
         fireTimer = 0;
     }
 
@@ -92,12 +101,18 @@ public class Soldier : MonoBehaviour
     {
         health -= damage;
 
-        if (health <= 0)
+        if (health <= 0 && !isDead)
         {
             navMesh.enabled = false;
             anim.SetBool("Shoot", false);
             anim.SetBool("Run", false);
             anim.SetTrigger("Die");
+            isDead = true;
         }
+    }
+
+    public void ShootFX()
+    {
+        audioSource.PlayOneShot(shootAudio);
     }
 }
