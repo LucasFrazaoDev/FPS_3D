@@ -11,6 +11,7 @@ public class Soldier : MonoBehaviour
     private NavMeshAgent navMesh;
     private GameObject player;
     private AudioSource audioSource;
+    private PlayerHealth playerHealth;
 
     public ParticleSystem fireEffect;
     public AudioClip shootAudio;
@@ -34,13 +35,15 @@ public class Soldier : MonoBehaviour
         anim = GetComponent<Animator>();
         navMesh= GetComponent<NavMeshAgent>();
         audioSource = GetComponent<AudioSource>();
+        playerHealth = GetComponent<PlayerHealth>();
+
         player = GameObject.FindGameObjectWithTag("Player");
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (navMesh.enabled)
+        if (navMesh.enabled && !playerHealth.isDead)
         {
             float dist = Vector3.Distance(player.transform.position, transform.position);
             bool shoot = false;
@@ -55,7 +58,8 @@ public class Soldier : MonoBehaviour
                 }
 
                 navMesh.SetDestination(player.transform.position);
-                transform.LookAt(player.transform);
+                //transform.LookAt(player.transform);
+                transform.position = new Vector3(player.transform.position.x, transform.position.y, transform.position.z);
                 shootpoint.LookAt(player.transform);
             }
 

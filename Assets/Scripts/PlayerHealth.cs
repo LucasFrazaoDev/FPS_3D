@@ -15,6 +15,8 @@ public class PlayerHealth : MonoBehaviour
     public float recoveryRate = 5f;
     private float recoveryTimer;
 
+    public bool isDead;
+
     private void Start()
     {
         health = maxHealth;
@@ -42,6 +44,8 @@ public class PlayerHealth : MonoBehaviour
 
         if (health <= 0)
         {
+            GameController.gameController.ShowGameOver();
+            isDead = true;
             Debug.Log("Game Over");
         }
 
