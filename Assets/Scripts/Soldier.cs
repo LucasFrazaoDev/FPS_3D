@@ -35,9 +35,8 @@ public class Soldier : MonoBehaviour
         anim = GetComponent<Animator>();
         navMesh= GetComponent<NavMeshAgent>();
         audioSource = GetComponent<AudioSource>();
-        playerHealth = GetComponent<PlayerHealth>();
-
         player = GameObject.FindGameObjectWithTag("Player");
+        playerHealth = player.GetComponent<PlayerHealth>();
     }
 
     // Update is called once per frame
@@ -59,8 +58,8 @@ public class Soldier : MonoBehaviour
 
                 navMesh.SetDestination(player.transform.position);
                 //transform.LookAt(player.transform);
-                transform.position = new Vector3(player.transform.position.x, transform.position.y, transform.position.z);
                 shootpoint.LookAt(player.transform);
+                transform.LookAt(new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z));
             }
 
             if (!follow || shoot)

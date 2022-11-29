@@ -25,7 +25,7 @@ public class PlayerHealth : MonoBehaviour
     private void Update()
     {
         recoveryTimer += Time.deltaTime;
-        Debug.Log(recoveryTimer);
+        //Debug.Log(recoveryTimer);
 
         if (recoveryTimer > recoveryRate)
         {
